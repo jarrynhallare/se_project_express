@@ -1,14 +1,14 @@
 const router = require("express").Router();
-const clothingItem = require('./clothingItem')
-
+const clothingItem = require("./clothingItems");
 const userRouter = require("./users");
 
-router.use('/items', clothingItem);
+const DEFAULT_ERROR = 500;
+
+router.use("/items", clothingItem);
 router.use("/users", userRouter);
 
-
 router.use((req, res) => {
-     res.status(DEFAULT_ERROR).send({message: 'An error has occurred on the server'})
-})
+  res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+});
 
 module.exports = router;

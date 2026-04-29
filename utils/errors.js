@@ -1,4 +1,5 @@
-export const INVALID_DATA = 400;
-export const NON_EXISITANT = 404;
-export const DEFAULT_ERROR = 500;
+const NON_EXISITANT = 404;
+const DEFAULT_ERROR = 500;
+const INVALID_DATA = 400;
 
+module.exports = { NON_EXISITANT, DEFAULT_ERROR, INVALID_DATA };

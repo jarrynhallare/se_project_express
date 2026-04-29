@@ -1,2 +1,17 @@
 name: Globals
-values: []
+values:
+  - key: base_url
+    value: http://localhost:3001
+    enabled: true
+  - key: port
+    value: "3001"
+    enabled: true
+  - key: database_name
+    value: wtwr_db
+    enabled: true
+  - key: mongodb_host
+    value: 127.0.0.1
+    enabled: true
+  - key: mongodb_port
+    value: "27017"
+    enabled: true

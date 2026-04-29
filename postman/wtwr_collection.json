@@ -1,0 +1,300 @@
+{
+  "info": {
+    "name": "WTWR API - Complete Tests",
+    "description": "API tests including valid requests and error handling"
+  },
+  "item": [
+    {
+      "name": "Users - Valid Requests",
+      "item": [
+        {
+          "name": "1. Create User (Valid)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', function() {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has _id', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData._id).to.exist;",
+                  "  pm.environment.set('user_id', responseData._id);",
+                  "});",
+                  "",
+                  "pm.test('Response has name field', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData.name).to.equal('John Doe');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"avatar\": \"https://example.com/avatar.jpg\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"]}
+          }
+        },
+        {
+          "name": "2. Get All Users",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(Array.isArray(responseData)).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('Array contains user objects with _id', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  if(responseData.length > 0) {",
+                  "    pm.expect(responseData[0]).to.have.property('_id');",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"]}
+          }
+        },
+        {
+          "name": "3. Get User by ID (Valid)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has _id field', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData._id).to.exist;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["users", "{{user_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users - Error Handling",
+      "item": [
+        {
+          "name": "Create User - Name too short",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('Error message present', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData.message).to.exist;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"name\": \"J\", \"avatar\": \"https://example.com/avatar.jpg\"}"},
+            "url": {"raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"]}
+          }
+        },
+        {
+          "name": "Create User - Missing name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"avatar\": \"https://example.com/avatar.jpg\"}"},
+            "url": {"raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"]}
+          }
+        },
+        {
+          "name": "Get User - Invalid ID format",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400', function() {",
+                  "  pm.response.to.have.status(400);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/users/invalid-id", "host": ["{{base_url}}"], "path": ["users", "invalid-id"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items - Valid Requests",
+      "item": [
+        {
+          "name": "1. Create Item (Valid)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', function() {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response has data object', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData.data).to.exist;",
+                  "});",
+                  "",
+                  "pm.test('Data object has _id', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData.data._id).to.exist;",
+                  "  pm.environment.set('item_id', responseData.data._id);",
+                  "});",
+                  "",
+                  "pm.test('Item has correct name', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData.data.name).to.equal('Winter Jacket');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Winter Jacket\",\n  \"weather\": \"cold\",\n  \"imageURL\": \"https://example.com/jacket.jpg\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/items", "host": ["{{base_url}}"], "path": ["items"]}
+          }
+        },
+        {
+          "name": "2. Get All Items",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is an array', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(Array.isArray(responseData)).to.be.true;",
+                  "});",
+                  "",
+                  "pm.test('Array items have _id', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  if(responseData.length > 0) {",
+                  "    pm.expect(responseData[0]._id).to.exist;",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/items", "host": ["{{base_url}}"], "path": ["items"]}
+          }
+        },
+        {
+          "name": "3. Update Item (Valid)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', function() {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has data object', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData.data).to.exist;",
+                  "});",
+                  "",
+                  "pm.test('Updated imageURL is correct', function() {",
+                  "  const responseData = pm.response.json();",
+                  "  pm.expect(responseData.data.imageURL).to.equal('https://example.com/new-jacket.jpg');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\"imageURL\": \"https://example.com/new-jacket.jpg\"}"},
+            "url": {"raw": "{{base_url}}/items/{{item_id}}", "host": ["{{base_url}}"], "path": ["items", "{{item_id}}"]}
+          }
+        },
+        {
+          "name": "4. Delete Item (Valid)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 204', function() {",
+                  "  pm.response.to.have.status(204);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "url": {"raw": "{{base_url}}/items/{{item_id}}", "host": ["{{base_url}}"], "path": ["items", "{{item_id}}"]}
+          }
+        }
+      ]
+    }
+  ]
+}
