@@ -1,4 +1,4 @@
-const { NON_EXISITANT, DEFAULT_ERROR, INVALID_DATA } = require("../utils/errors");
+const { DEFAULT_ERROR } = require("../utils/errors");
 const ClothingItem = require("../models/clothingItem");
 
 const createItem = (req, res) => {
@@ -8,25 +8,25 @@ const createItem = (req, res) => {
     return res.status(400).send({ message: "Missing required fields: name, weather, imageURL" });
   }
 
-  ClothingItem.create({ name, weather, imageURL })
+  return ClothingItem.create({ name, weather, imageURL })
     .then((item) => {
       res.status(201).send({ data: item });
     })
     .catch((e) => {
       console.error(e);
       if (e.name === "ValidationError") {
-        return res.status(400).send({ message: "Invalid data: " + e.message });
+        return res.status(400).send({ message: `Invalid data: ${e.message}` });
       }
-      res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
     });
 };
 
 const getItems = (req, res) => {
-  ClothingItem.find({})
+  return ClothingItem.find({})
     .then((items) => res.status(200).send(items))
     .catch((e) => {
       console.error(e);
-      res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -38,7 +38,7 @@ const updateItem = (req, res) => {
     return res.status(400).send({ message: "imageURL is required" });
   }
 
-  ClothingItem.findByIdAndUpdate(itemId, { $set: { imageURL } }, { new: true })
+   return ClothingItem.findByIdAndUpdate(itemId, { $set: { imageURL } }, { new: true })
     .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((e) => {
@@ -46,22 +46,22 @@ const updateItem = (req, res) => {
       if (e.name === "DocumentNotFoundError") {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
     });
 };
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
-  ClothingItem.findByIdAndDelete(itemId)
+  return ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(204).send({}))
+    .then(() => res.status(204).send({}))
     .catch((e) => {
       console.error(e);
       if (e.name === "DocumentNotFoundError") {
         return res.status(404).send({ message: "Item not found" });
       }
-      res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -70,4 +70,5 @@ module.exports = {
   getItems,
   updateItem,
   deleteItem,
-};
+
+    };

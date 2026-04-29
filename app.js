@@ -10,6 +10,7 @@ app.use(express.json());
 mongoose
   .connect("mongodb://127.0.0.1:27017/wtwr_db")
   .then(() => {
+    // eslint-disable-next-line no-console
     console.log("Connected to DB");
   })
   .catch(console.error);
@@ -17,6 +18,7 @@ mongoose
 app.use("/", mainRouter);
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Listening on port ${PORT}`);
 
   app.use((req, res, next) => {
@@ -27,6 +29,7 @@ app.listen(PORT, () => {
 });
 });
 
-module.exports.createClothingItem = (req, res) => {
+module.exports.createClothingItem = (req) => {
+  // eslint-disable-next-line no-console
   console.log(req.user._id);// _id will become accessible
 };
