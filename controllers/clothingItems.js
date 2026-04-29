@@ -9,9 +9,7 @@ const createItem = (req, res) => {
   }
 
   return ClothingItem.create({ name, weather, imageURL })
-    .then((item) => {
-      res.status(201).send({ data: item });
-    })
+    .then((item) => res.status(201).send({ data: item }))
     .catch((e) => {
       console.error(e);
       if (e.name === "ValidationError") {
