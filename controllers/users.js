@@ -1,4 +1,4 @@
-const {DEFAULT_ERROR, INVALID_DATA} = require("../utils/errors");
+const {DEFAULT_ERROR, INVALID_DATA, NON_EXISITANT} = require("../utils/errors");
 const User = require("../models/user");
 
     // GET /users
@@ -27,7 +27,7 @@ const User = require("../models/user");
                 console.error(err);
                 if (err.name === "ValidationError") {
 
-                    return res.status(400).send({"message": "invalid data passed to the methods for creating an user"});
+                    return res.status(INVALID_DATA).send({"message": "invalid data passed to the methods for creating an user"});
 
                 }
 
@@ -49,12 +49,12 @@ const User = require("../models/user");
                 console.error(err);
                 if (err.name === "DocumentNotFoundError") {
 
-                    return res.status(INVALID_DATA).send({"message": "there is no user"});
+                    return res.status(NON_EXISITANT).send({"message": "there is no user"});
 
                 }
                 if (err.name === "CastError") {
 
-                    return res.status(INVALID_DATA).send({"message": "there is no user"});
+                    return res.status(NON_EXISITANT).send({"message": "there is no user"});
 
                 }
 

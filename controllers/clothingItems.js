@@ -1,5 +1,5 @@
 /* eslint prefer-const: "error" */
-const {DEFAULT_ERROR} = require("../utils/errors");
+const {DEFAULT_ERROR, INVALID_DATA} = require("../utils/errors");
 const ClothingItem = require("../models/clothingItem");
 
    const createItem = (req, res) => {
@@ -9,7 +9,7 @@ const ClothingItem = require("../models/clothingItem");
         if (!name || !weather || !imageURL) {
 
             return res.status(400).send({
-                "message": "Missing required fields: name, weather, imageURL"
+                message: "Missing required fields: name, weather, imageURL"
             });
 
         }
@@ -17,14 +17,14 @@ const ClothingItem = require("../models/clothingItem");
         return ClothingItem.create({name,
             weather,
             imageURL}).
-            then((item) => res.status(201).send({"data": item})).
+            then((item) => res.status(201).send(item)).
             catch((e) => {
 
                 console.error(e);
 
                 if (e.name === "ValidationError") {
 
-                    return res.status(400).send({
+                    return res.status(INVALID_DATA).send({
                         "message": `Invalid data: ${e.message}`
                     });
 
@@ -39,13 +39,13 @@ const ClothingItem = require("../models/clothingItem");
     };
 
    const getItems = (req, res) => ClothingItem.find({}).
-        then((items) => res.status(200).send({"data": items})).
+        then((items) => res.status(200).send(items)).
         catch((e) => {
 
             console.error(e);
 
-            return res.status(DEFAULT_ERROR).send({
-                "message": "An error has occurred on the server"
+            return res.status(INVALID_DATA).send({
+                "message": "invalid data passed to the methods for creating an item"
             });
 
         });
@@ -68,7 +68,7 @@ const ClothingItem = require("../models/clothingItem");
                 "runValidators": true}
         ).
             orFail().
-            then((item) => res.status(200).send({"data": item})).
+            then((item) => res.status(200).send(item)).
             catch((e) => {
 
                 console.error(e);
@@ -103,7 +103,7 @@ const ClothingItem = require("../models/clothingItem");
 
         return ClothingItem.findByIdAndDelete(itemId).
             orFail().
-            then(() => res.status(204).send({})).
+            then(() => res.status(200).send({ message: "Item deleted successfully" })).
             catch((e) => {
 
                 console.error(e);
