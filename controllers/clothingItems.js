@@ -1,110 +1,140 @@
-const { DEFAULT_ERROR } = require("../utils/errors");
-const ClothingItem = require("../models/clothingItem");
+/* eslint prefer-const: "error" */
+const {DEFAULT_ERROR} = require("../utils/errors");
+const ClothingItem = require("../models/clothingItem"),
 
-const createItem = (req, res) => {
-  const { name, weather, imageURL } = req.body;
+    createItem = (req, res) => {
 
-  if (!name || !weather || !imageURL) {
-    return res.status(400).send({
-      message: "Missing required fields: name, weather, imageURL",
-    });
-  }
+        const {name, weather, imageURL} = req.body;
 
-  return ClothingItem.create({ name, weather, imageURL })
-    .then((item) => { return res.status(201).send({ data: item }); })
-    .catch((e) => {
-    console.error(e);
+        if (!name || !weather || !imageURL) {
 
-    if (e.name === "ValidationError") {
-      return res.status(400).send({
-        message: `Invalid data: ${e.message}`,
-      });
-    }
+            return res.status(400).send({
+                "message": "Missing required fields: name, weather, imageURL"
+            });
 
-    return res.status(DEFAULT_ERROR).send({
-      message: "An error has occurred on the server",
-    });
-  });
-};
+        }
 
-const getItems = (req, res) => {
-  return ClothingItem.find({})
-    .then((items) => { return res.status(200).send({ data: items }); })
-    .catch((e) => {
-      console.error(e);
+        return ClothingItem.create({name,
+            weather,
+            imageURL}).
+            then((item) => res.status(201).send({"data": item})).
+            catch((e) => {
 
-      return res.status(DEFAULT_ERROR).send({
-        message: "An error has occurred on the server",
-      });
-    });
-};
+                console.error(e);
 
-const updateItem = (req, res) => {
-  const { itemId } = req.params;
-  const { imageURL } = req.body;
+                if (e.name === "ValidationError") {
 
-  if (!imageURL) {
-    return res.status(400).send({ message: "imageURL is required" });
-  }
+                    return res.status(400).send({
+                        "message": `Invalid data: ${e.message}`
+                    });
 
-  return ClothingItem.findByIdAndUpdate(
-    itemId,
-    { $set: { imageURL } },
-    { new: true, runValidators: true }
-  )
-    .orFail()
-    .then((item) => { return res.status(200).send({ data: item }); })
-    .catch((e) => {
-      console.error(e);
+                }
 
-      if (e.name === "DocumentNotFoundError") {
-        return res.status(404).send({
-          message: "Item not found",
-        });
-      }
+                return res.status(DEFAULT_ERROR).send({
+                    "message": "An error has occurred on the server"
+                });
 
-      if (e.name === "CastError") {
-        return res.status(400).send({
-          message: "Invalid item ID",
-        });
-      }
+            });
 
-      return res.status(DEFAULT_ERROR).send({
-        message: "An error has occurred on the server",
-      });
-    });
-};
+    },
 
-const deleteItem = (req, res) => {
-  const { itemId } = req.params;
+    getItems = (req, res) => ClothingItem.find({}).
+        then((items) => res.status(200).send({"data": items})).
+        catch((e) => {
 
-  return ClothingItem.findByIdAndDelete(itemId)
-    .orFail()
-    .then(() => { return res.status(204).send({}); })
-    .catch((e) => {
-      console.error(e);
+            console.error(e);
 
-      if (e.name === "DocumentNotFoundError") {
-        return res.status(404).send({
-          message: "Item not found",
-        });
-      }
+            return res.status(DEFAULT_ERROR).send({
+                "message": "An error has occurred on the server"
+            });
 
-      if (e.name === "CastError") {
-        return res.status(400).send({
-          message: "Invalid item ID",
-        });
-      }
+        }),
 
-      return res.status(DEFAULT_ERROR).send({
-        message: "An error has occurred on the server",
-      });
-    });
-};
+    updateItem = (req, res) => {
+
+        const {itemId} = req.params,
+            {imageURL} = req.body;
+
+        if (!imageURL) {
+
+            return res.status(400).send({"message": "imageURL is required"});
+
+        }
+
+        return ClothingItem.findByIdAndUpdate(
+            itemId,
+            {"$set": {imageURL}},
+            {"new": true,
+                "runValidators": true}
+        ).
+            orFail().
+            then((item) => res.status(200).send({"data": item})).
+            catch((e) => {
+
+                console.error(e);
+
+                if (e.name === "DocumentNotFoundError") {
+
+                    return res.status(404).send({
+                        "message": "Item not found"
+                    });
+
+                }
+
+                if (e.name === "CastError") {
+
+                    return res.status(400).send({
+                        "message": "Invalid item ID"
+                    });
+
+                }
+
+                return res.status(DEFAULT_ERROR).send({
+                    "message": "An error has occurred on the server"
+                });
+
+            });
+
+    },
+
+    deleteItem = (req, res) => {
+
+        const {itemId} = req.params;
+
+        return ClothingItem.findByIdAndDelete(itemId).
+            orFail().
+            then(() => res.status(204).send({})).
+            catch((e) => {
+
+                console.error(e);
+
+                if (e.name === "DocumentNotFoundError") {
+
+                    return res.status(404).send({
+                        "message": "Item not found"
+                    });
+
+                }
+
+                if (e.name === "CastError") {
+
+                    return res.status(400).send({
+                        "message": "Invalid item ID"
+                    });
+
+                }
+
+                return res.status(DEFAULT_ERROR).send({
+                    "message": "An error has occurred on the server"
+                });
+
+            });
+
+    };
 
 module.exports = {
-  createItem,
-  getItems,
-  updateItem,
-  deleteItem,
+    createItem,
+    getItems,
+    updateItem,
+    deleteItem
 };
