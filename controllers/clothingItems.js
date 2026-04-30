@@ -1,30 +1,33 @@
-const { DEFAULT_ERROR } = require("../utils/errors");
-const ClothingItem = require("../models/clothingItem");
-
 const createItem = (req, res) => {
   const { name, weather, imageURL } = req.body;
 
   if (!name || !weather || !imageURL) {
-    return res.status(400).send({ message: "Missing required fields: name, weather, imageURL" });
+    return res.status(400).send({
+      message: "Missing required fields: name, weather, imageURL",
+    });
   }
 
-  ClothingItem.create({ name, weather, imageURL })
+  return ClothingItem.create({ name, weather, imageURL })
     .then((item) => res.status(201).send({ data: item }))
     .catch((e) => {
       console.error(e);
       if (e.name === "ValidationError") {
         return res.status(400).send({ message: `Invalid data: ${e.message}` });
       }
-      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res.status(DEFAULT_ERROR).send({
+        message: "An error has occurred on the server",
+      });
     });
 };
 
 const getItems = (req, res) => {
-  ClothingItem.find({})
+  return ClothingItem.find({})
     .then((items) => res.status(200).send({ data: items }))
     .catch((e) => {
       console.error(e);
-      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res.status(DEFAULT_ERROR).send({
+        message: "An error has occurred on the server",
+      });
     });
 };
 
@@ -36,7 +39,7 @@ const updateItem = (req, res) => {
     return res.status(400).send({ message: "imageURL is required" });
   }
 
-  ClothingItem.findByIdAndUpdate(
+  return ClothingItem.findByIdAndUpdate(
     itemId,
     { $set: { imageURL } },
     { new: true, runValidators: true }
@@ -51,14 +54,16 @@ const updateItem = (req, res) => {
       if (e.name === "CastError") {
         return res.status(400).send({ message: "Invalid item ID" });
       }
-      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res.status(DEFAULT_ERROR).send({
+        message: "An error has occurred on the server",
+      });
     });
 };
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
-  ClothingItem.findByIdAndDelete(itemId)
+  return ClothingItem.findByIdAndDelete(itemId)
     .orFail()
     .then(() => res.status(204).send({}))
     .catch((e) => {
@@ -69,13 +74,8 @@ const deleteItem = (req, res) => {
       if (e.name === "CastError") {
         return res.status(400).send({ message: "Invalid item ID" });
       }
-      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res.status(DEFAULT_ERROR).send({
+        message: "An error has occurred on the server",
+      });
     });
-};
-
-module.exports = {
-  createItem,
-  getItems,
-  updateItem,
-  deleteItem,
 };
