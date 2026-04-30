@@ -13,18 +13,18 @@ const createItem = (req, res) => {
   return ClothingItem.create({ name, weather, imageURL })
     .then((item) => res.status(201).send({ data: item }))
     .catch((e) => {
-  console.error(e);
+    console.error(e);
 
-  let status = DEFAULT_ERROR;
-  let message = "An error has occurred on the server";
+    if (e.name === "ValidationError") {
+      return res.status(400).send({
+        message: `Invalid data: ${e.message}`,
+      });
+    }
 
-  if (e.name === "ValidationError") {
-    status = 400;
-    message = `Invalid data: ${e.message}`;
-  }
-
-  return res.status(status).send({ message });
-});
+    return res.status(DEFAULT_ERROR).send({
+      message: "An error has occurred on the server",
+    });
+  });
 };
 
 const getItems = (req, res) => {
@@ -33,10 +33,9 @@ const getItems = (req, res) => {
     .catch((e) => {
       console.error(e);
 
-      let status = DEFAULT_ERROR;
-      let message = "An error has occurred on the server";
-
-      return res.status(status).send({ message });
+      return res.status(DEFAULT_ERROR).send({
+        message: "An error has occurred on the server",
+      });
     });
 };
 
@@ -56,21 +55,24 @@ const updateItem = (req, res) => {
     .orFail()
     .then((item) => res.status(200).send({ data: item }))
     .catch((e) => {
-  console.error(e);
+      console.error(e);
 
-  let status = DEFAULT_ERROR;
-  let message = "An error has occurred on the server";
+      if (e.name === "DocumentNotFoundError") {
+        return res.status(404).send({
+          message: "Item not found",
+        });
+      }
 
-  if (e.name === "DocumentNotFoundError") {
-    status = 404;
-    message = "Item not found";
-  } else if (e.name === "CastError") {
-    status = 400;
-    message = "Invalid item ID";
-  }
+      if (e.name === "CastError") {
+        return res.status(400).send({
+          message: "Invalid item ID",
+        });
+      }
 
-  return res.status(status).send({ message });
-});
+      return res.status(DEFAULT_ERROR).send({
+        message: "An error has occurred on the server",
+      });
+    });
 };
 
 const deleteItem = (req, res) => {
@@ -80,21 +82,24 @@ const deleteItem = (req, res) => {
     .orFail()
     .then(() => res.status(204).send({}))
     .catch((e) => {
-  console.error(e);
+      console.error(e);
 
-  let status = DEFAULT_ERROR;
-  let message = "An error has occurred on the server";
+      if (e.name === "DocumentNotFoundError") {
+        return res.status(404).send({
+          message: "Item not found",
+        });
+      }
 
-  if (e.name === "DocumentNotFoundError") {
-    status = 404;
-    message = "Item not found";
-  } else if (e.name === "CastError") {
-    status = 400;
-    message = "Invalid item ID";
-  }
+      if (e.name === "CastError") {
+        return res.status(400).send({
+          message: "Invalid item ID",
+        });
+      }
 
-  return res.status(status).send({ message });
-});
+      return res.status(DEFAULT_ERROR).send({
+        message: "An error has occurred on the server",
+      });
+    });
 };
 
 module.exports = {
