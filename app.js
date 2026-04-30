@@ -1,9 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const mainRouter = require("./routes/index"),
+const mainRouter = require("./routes/index");
 
-    app = express(),
-    {PORT = 3001} = process.env;
+const app = express();
+const {PORT = 3001} = process.env;
 
 app.use(express.json());
 

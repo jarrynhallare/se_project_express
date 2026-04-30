@@ -1,8 +1,8 @@
 const {DEFAULT_ERROR, INVALID_DATA} = require("../utils/errors");
-const User = require("../models/user"),
+const User = require("../models/user");
 
     // GET /users
-    getUsers = (req, res) => {
+    const getUsers = (req, res) => {
 
         User.find({}).
             then((users) => res.status(200).send(users)).
@@ -13,9 +13,9 @@ const User = require("../models/user"),
 
             });
 
-    },
+    };
 
-    createUser = (req, res) => {
+    const createUser = (req, res) => {
 
         const {name, avatar} = req.body;
 
@@ -35,9 +35,9 @@ const User = require("../models/user"),
 
             });
 
-    },
+    };
 
-    getUserById = (req, res) => {
+   const getUserById = (req, res) => {
 
         const {userId} = req.params;
 

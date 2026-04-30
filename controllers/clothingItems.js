@@ -1,8 +1,8 @@
 /* eslint prefer-const: "error" */
 const {DEFAULT_ERROR} = require("../utils/errors");
-const ClothingItem = require("../models/clothingItem"),
+const ClothingItem = require("../models/clothingItem");
 
-    createItem = (req, res) => {
+   const createItem = (req, res) => {
 
         const {name, weather, imageURL} = req.body;
 
@@ -36,9 +36,9 @@ const ClothingItem = require("../models/clothingItem"),
 
             });
 
-    },
+    };
 
-    getItems = (req, res) => ClothingItem.find({}).
+   const getItems = (req, res) => ClothingItem.find({}).
         then((items) => res.status(200).send({"data": items})).
         catch((e) => {
 
@@ -48,12 +48,12 @@ const ClothingItem = require("../models/clothingItem"),
                 "message": "An error has occurred on the server"
             });
 
-        }),
+        });
 
-    updateItem = (req, res) => {
+   const updateItem = (req, res) => {
 
-        const {itemId} = req.params,
-            {imageURL} = req.body;
+        const {itemId} = req.params;
+        const {imageURL} = req.body;
 
         if (!imageURL) {
 
@@ -95,9 +95,9 @@ const ClothingItem = require("../models/clothingItem"),
 
             });
 
-    },
+    };
 
-    deleteItem = (req, res) => {
+   const deleteItem = (req, res) => {
 
         const {itemId} = req.params;
 

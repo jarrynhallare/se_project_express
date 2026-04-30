@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const clothingItem = require("./clothingItems");
-const userRouter = require("./users"),
+const userRouter = require("./users");
 
-    DEFAULT_ERROR = 500;
+const DEFAULT_ERROR = 500;
 
 router.use(
     "/items",
