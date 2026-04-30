@@ -11,7 +11,7 @@ const createItem = (req, res) => {
   }
 
   return ClothingItem.create({ name, weather, imageURL })
-    .then((item) => res.status(201).send({ data: item }))
+    .then((item) => { return res.status(201).send({ data: item }); })
     .catch((e) => {
     console.error(e);
 
@@ -29,7 +29,7 @@ const createItem = (req, res) => {
 
 const getItems = (req, res) => {
   return ClothingItem.find({})
-    .then((items) => res.status(200).send({ data: items }))
+    .then((items) => { return res.status(200).send({ data: items }); })
     .catch((e) => {
       console.error(e);
 
@@ -53,7 +53,7 @@ const updateItem = (req, res) => {
     { new: true, runValidators: true }
   )
     .orFail()
-    .then((item) => res.status(200).send({ data: item }))
+    .then((item) => { return res.status(200).send({ data: item }); })
     .catch((e) => {
       console.error(e);
 
@@ -80,7 +80,7 @@ const deleteItem = (req, res) => {
 
   return ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then(() => res.status(204).send({}))
+    .then(() => { return res.status(204).send({}); })
     .catch((e) => {
       console.error(e);
 
