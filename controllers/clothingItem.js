@@ -1,15 +1,14 @@
 /* eslint prefer-const: "error" */
+const mongoose = require("mongoose");
 const { DEFAULT_ERROR, INVALID_DATA } = require("../utils/errors");
 const ClothingItem = require("../models/clothingItem");
-const mongoose = require("mongoose");
+
 
 const createItem = (req, res) => {
 
     console.log("REQ BODY:", req.body);
 
-    const name = req.body.name;
-    const weather = req.body.weather;
-    const imageURL = req.body.imageURL;
+    const { name, weather, imageURL } = req.body;
 
     return ClothingItem.create({
         name,

@@ -14,6 +14,10 @@ const clothingItem = new mongoose.Schema({
     imageURL: {
         type: String,
         required: true,
+        validate: {
+            validator: (v) => validator.isURL(v),
+            message: "Invalid URL format"
+        }
     },
     likes: {
         type: [mongoose.Schema.Types.ObjectId],
