@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+
 const { DEFAULT_ERROR, INVALID_DATA, NON_EXISTENT } = require("../utils/errors");
 const User = require("../models/user");
 
