@@ -14,9 +14,7 @@ router.use(
 );
 
 router.use((req, res) => {
-
-    res.status(DEFAULT_ERROR).send({"message": "An error has occurred on the server"});
-
+  res.status(404).send({ message: "Requested resource not found" });
 });
 
 module.exports = router;
