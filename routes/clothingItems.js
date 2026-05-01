@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const {createItem, getItems, updateItem, deleteItem} = require("../controllers/clothingItems");
+const { createItem, getItems, updateItem, deleteItem, likeItem, unlikeItem } = require("../controllers/clothingItem");
 
 // Create
 router.post(
@@ -19,10 +19,22 @@ router.put(
     updateItem
 );
 
+// Like
+router.put(
+    "/:itemId/likes",
+    likeItem
+);
+
 // Delete
 router.delete(
     "/:itemId",
     deleteItem
+);
+
+// Unlike
+router.delete(
+    "/:itemId/likes",
+    unlikeItem
 );
 
 

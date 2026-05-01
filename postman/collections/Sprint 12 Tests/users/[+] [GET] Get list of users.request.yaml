@@ -1,16 +1,6 @@
 $kind: http-request
-name: "[+] [GET] Get list of users"
 url: "{{base_url}}/users"
-method: POST
-body:
-  type: json
-  content: "{\r
-
-    \  \"name\": \"J\",\r
-
-    \  \"avatar\": \"https://example.com/avatar.jpg\"\r
-
-    }"
+method: GET
 scripts:
   - type: beforeRequest
     code: |+

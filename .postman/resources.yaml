@@ -6,7 +6,7 @@ workspace:
 
 cloudResources:
   collections:
-    ..\postman\collections\Sprint 12 Tests: 54388224-d4c8aed8-099e-4e9c-ac85-150e4fc3a65a
+    ..\postman\collections\Sprint 12 Tests: 54388224-4850f55f-17e1-4fd3-a2c4-9ccd0c1cb200
 
 # All resources in the `postman/` folder are automatically registered in Local View.
 # Point to additional files outside the `postman/` folder to register them individually. Example:

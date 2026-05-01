@@ -6,11 +6,11 @@ body:
   type: json
   content: "{\r
 
-    \  \"name\": \"Winter Jacket\",\r
+    \  \"name\": \"testItem\",\r
 
-    \  \"weather\": \"cold\",\r
+    \  \"weather\": \"hot\",\r
 
-    \  \"imageURL\": \"https://example.com/jacket.jpg\" \r
+    \  \"imageURL\": \"https://example.com/link.test\"\r
 
     }"
 scripts:

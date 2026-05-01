@@ -1,4 +1,4 @@
-const {DEFAULT_ERROR, INVALID_DATA, NON_EXISITANT} = require("../utils/errors");
+const {DEFAULT_ERROR, INVALID_DATA, NON_EXISTENT} = require("../utils/errors");
 const User = require("../models/user");
 
     // GET /users
@@ -49,14 +49,12 @@ const User = require("../models/user");
                 console.error(err);
                 if (err.name === "DocumentNotFoundError") {
 
-                    return res.status(NON_EXISITANT).send({"message": "there is no user"});
+                    return res.status(NON_EXISTENT).send({"message": "there is no user"});
 
                 }
-                if (err.name === "CastError") {
+                
+                if (err.name === "CastError") {    return res.status(INVALID_DATA).send({ "message": "Invalid user ID" });}
 
-                    return res.status(NON_EXISITANT).send({"message": "there is no user"});
-
-                }
 
                 return res.status(DEFAULT_ERROR).send({"message": "An error has occurred on the server"});
 

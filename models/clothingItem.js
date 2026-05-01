@@ -7,18 +7,19 @@ const clothingItem = new mongoose.Schema({
         required: true,
 
     },
-    weather:{
-        type:String,
+    weather: {
+        type: String,
         required: true,
     },
     imageURL: {
         type: String,
         required: true,
-        validate: {
-            validator: (v) => validator.isURL(v),
-            message: 'link is not Valid',
-        },
+    },
+    likes: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'user',
+        default: [],
     },
 });
 
-module.exports = mongoose.model('clothingItems', clothingItem);
+module.exports = mongoose.model('clothingItem', clothingItem);
