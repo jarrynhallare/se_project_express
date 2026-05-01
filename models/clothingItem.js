@@ -14,14 +14,14 @@ const clothingItemSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => validator.isURL(v, { require_protocol: true }),
+      validator: (v) => validator.isURL(v),
       message: "Invalid URL format",
     },
   },
   likes: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    type: [mongoose.Schema.Types.ObjectId],
     default: [],
   },
 });
 
-module.exports = mongoose.model( "ClothingItem", clothingItemSchema);
+module.exports = mongoose.model("ClothingItem", clothingItemSchema);
