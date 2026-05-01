@@ -5,35 +5,31 @@ const ClothingItem = require("../models/clothingItem");
 
 
 const createItem = (req, res) => {
+  console.log("REQ BODY:", req.body);
 
-    console.log("REQ BODY:", req.body);
+  const { name, weather, imageURL } = req.body;
 
-    const { name, weather, imageURL } = req.body;
-
-    return ClothingItem.create({
-        name,
-        weather,
-        imageURL
-    })
-    .then((item) => res.status(201).send({
-    _id: item._id,
-    name: item.name,
-    weather: item.weather,
-    imageURL: item.imageURL
-}))
-    .catch((e) => {
-
-        console.error(e);
-
-        if (!name || !weather || !imageURL) {
+  if (!name || !weather || !imageURL) {
     return res.status(400).send({
-        message: "Missing required fields"
+      message: "Missing required fields",
     });
-}
+  }
 
-        return res.status(500).send({
-            message: "An error has occurred on the server"
-        });
+  return ClothingItem.create({ name, weather, imageURL })
+    .then((item) =>
+      res.status(201).send({
+        _id: item._id,
+        name: item.name,
+        weather: item.weather,
+        imageURL: item.imageURL,
+      })
+    )
+    .catch((e) => {
+      console.error(e);
+
+      return res.status(500).send({
+        message: "An error has occurred on the server",
+      });
     });
 };
 
