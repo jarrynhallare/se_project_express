@@ -1,0 +1,28 @@
+$kind: collection
+name: Sprint 12 Tests
+variables:
+  - key: item_name
+    value: 'testItem'
+  - key: item_weather
+    value: 'hot'
+  - key: item_imageUrl
+    value: 'https://example.com/link.test'
+  - key: item_id
+    value: ''
+  - key: user_name
+    value: 'Test User'
+  - key: user_avatar
+    value: 'https://example.com/avatar.jpg'
+  - key: user_id
+    value: ''
+  - key: user_id_code
+    value: ''
+  - key: base_url
+    value: 'http://localhost:3001'
+  - key: schema_message_only
+    value: '{"type":"object","properties":{"message":{"type":"string"}},"required":["message"]}'
+scripts:
+  - type: http:beforeRequest
+    language: text/javascript
+    code: |-
+      globalThis.utils = { getData: (data) => data };

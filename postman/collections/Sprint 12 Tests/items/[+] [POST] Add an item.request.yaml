@@ -1,16 +1,15 @@
 $kind: http-request
-name: "[+] [POST] Add an item"
 url: "{{base_url}}/items"
 method: POST
 body:
   type: json
   content: "{\r
 
-    \  \"name\": \"testItem\",\r
+    \    \"name\": \"{{item_name}}\",\r
 
-    \  \"weather\": \"hot\",\r
+    \    \"weather\": \"{{item_weather}}\",\r
 
-    \  \"imageURL\": \"https://example.com/link.test\"\r
+    \    \"imageUrl\": \"{{item_imageUrl}}\"\r
 
     }"
 scripts:

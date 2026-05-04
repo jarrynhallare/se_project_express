@@ -8,23 +8,28 @@ const createItem = (req, res) => {
     return res.status(400).send({ message: "Invalid data" });
   }
 
-  return ClothingItem.create({ name, weather, imageUrl, owner: req.user._id })
+  return ClothingItem.create({
+    name,
+    weather,
+    imageUrl,
+    owner: req.user._id,
+  })
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       if (err.name === "ValidationError") {
         return res.status(400).send({ message: "Invalid data" });
       }
-      res.status(500).send({ message: "Server error" })
-});
-};
 
-const getItems = (req, res) => {
-  return ClothingItem.find({})
-    .then((items) => res.status(200).send(items))
-    .catch((err) => {
-      res.status(500).send({ message: "Server error" });
+      return res.status(500).send({ message: "Server error" });
     });
 };
+
+const getItems = (req, res) =>
+ ClothingItem.find({})
+    .then((items) => res.status(200).send(items))
+    .catch(() => {
+      res.status(500).send({ message: "Server error" });
+    });
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;

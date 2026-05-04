@@ -1,5 +1,4 @@
 $kind: http-request
-name: "[+] [PUT] Likes an item"
 url: "{{base_url}}/items/:id/likes"
 method: PUT
 pathVariables:
