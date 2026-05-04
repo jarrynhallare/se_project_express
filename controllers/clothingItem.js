@@ -9,11 +9,13 @@ const createItem = (req, res) => {
   }
 
   return ClothingItem.create({
+
     name,
     weather,
     imageUrl,
     owner: req.user._id,
   })
+
     .then((item) => res.status(201).send(item))
     .catch((err) => {
       if (err.name === "ValidationError") {
