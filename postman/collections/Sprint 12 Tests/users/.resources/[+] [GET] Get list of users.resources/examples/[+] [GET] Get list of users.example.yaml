@@ -1,0 +1,40 @@
+$kind: http-example
+request:
+  url: "{{base_url}}/users"
+  method: POST
+  body:
+    type: json
+    content: "{\r
+
+      \  \"name\": \"Another User\",\r
+
+      \  \"avatar\": \"https://example.com/avatar2.jpg\",\r
+
+      \  \"email\": \"test@example.com\",\r
+
+      \  \"password\": \"password456\"\r
+
+      }"
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    x-powered-by: Express
+    content-type: application/json; charset=utf-8
+    content-length: "204"
+    etag: W/"cc-DR3v9wajhKEJ/0gDwCoHQ8a0t18"
+    date: Sun, 07 Jun 2026 13:49:57 GMT
+    connection: keep-alive
+    keep-alive: timeout=5
+  body:
+    type: json
+    content: |-
+      {
+        "name": "Test User",
+        "avatar": "https://example.com/avatar.jpg",
+        "email": "test@example.com",
+        "password": "$2a$10$Fbz8MkPDHPKmLYmG3LxVT.4c/PMfZMISEfxFwJiULNDSmeZmKPBcm",
+        "_id": "6a2577055f4e06780c89ee6e",
+        "__v": 0
+      }
+order: 1780840205819

@@ -1,6 +1,19 @@
 $kind: http-request
 url: "{{base_url}}/users"
-method: GET
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"name\": \"Test User\",\r
+
+    \  \"avatar\": \"https://example.com/avatar.jpg\",\r
+
+    \  \"email\": \"test@example.com\",\r
+
+    \  \"password\": \"password123\"\r
+
+    }"
 scripts:
   - type: beforeRequest
     code: |+
@@ -52,4 +65,5 @@ scripts:
 
       });"
     language: text/javascript
+examples: .resources/[+] [GET] Get list of users.resources/examples
 order: 1000
