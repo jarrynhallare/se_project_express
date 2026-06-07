@@ -19,6 +19,13 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
+  // Validate required fields before hashing
+  if (!password || password.length < 8) {
+    return res.status(INVALID_DATA).send({
+      message: "invalid data passed to the methods for creating an user",
+    });
+  }
+
   bcrypt.hash(password, 10)
     .then((hashedPassword) => {
       User.create({
