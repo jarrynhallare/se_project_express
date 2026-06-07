@@ -19,7 +19,6 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
 
-  // Validate required fields before hashing
   if (!password || password.length < 8) {
     return res.status(INVALID_DATA).send({
       message: "invalid data passed to the methods for creating an user",
@@ -34,7 +33,10 @@ const createUser = (req, res) => {
         email,
         password: hashedPassword,
       })
-        .then((user) => res.status(201).send(user))
+        .then((user) => {
+          delete user.password;
+          res.status(201).send(user);
+        })
         .catch((err) => {
           console.error(err);
           if (err.name === "ValidationError") {
@@ -76,10 +78,8 @@ const login = (req, res) => {
     });
 };
 
-const getUserById = (req, res) => {
-  const { userId } = req.params;
-
-  User.findById(userId)
+const getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
@@ -98,4 +98,32 @@ const getUserById = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, login, getUserById };
+const updateUser = (req, res) => {
+  const { name, avatar } = req.body;
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, avatar },
+    { new: true, runValidators: true }
+  )
+    .orFail()
+    .then((user) => res.status(200).send(user))
+    .catch((err) => {
+      console.error(err);
+      if (err.name === "ValidationError") {
+        return res.status(INVALID_DATA).send({
+          message: "invalid data passed to the methods for updating a user",
+        });
+      }
+
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(NON_EXISTENT).send({ message: "there is no user" });
+      }
+
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: "An error has occurred on the server" });
+    });
+};
+
+module.exports = { getUsers, createUser, login, getCurrentUser, updateUser };

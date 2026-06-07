@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const ClothingItem = require("../models/clothingItem");
+const { INVALID_DATA, NON_EXISTENT, DEFAULT_ERROR } = require("../utils/errors");
 
 // CREATE ITEM
 const createItem = (req, res) => {
@@ -16,9 +17,9 @@ const createItem = (req, res) => {
     })
     .catch((err) => {
       if (err.name === "ValidationError") {
-        res.status(400).send({ message: "Invalid data" });
+        res.status(INVALID_DATA).send({ message: "Invalid data" });
       } else {
-        res.status(500).send({ message: "Server error" });
+        res.status(DEFAULT_ERROR).send({ message: "Server error" });
       }
     });
 };
@@ -30,7 +31,7 @@ const getItems = (req, res) => {
       res.status(200).send(items);
     })
     .catch(() => {
-      res.status(500).send({ message: "Server error" });
+      res.status(DEFAULT_ERROR).send({ message: "Server error" });
     });
 };
 
@@ -39,21 +40,22 @@ const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
-    res.status(400).send({ message: "Invalid item ID" });
-    return;
+    return res.status(INVALID_DATA).send({ message: "Invalid item ID" });
   }
 
-  ClothingItem.findByIdAndDelete(itemId)
+  ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
-      res.status(200).send(item);
+      if (item.owner.toString() !== req.user._id.toString()) {
+        return res.status(403).send({ message: "Forbidden" });
+      }
+      return ClothingItem.findByIdAndDelete(itemId).then(() => res.status(200).send(item));
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        res.status(404).send({ message: "Not found" });
-      } else {
-        res.status(500).send({ message: "Server error" });
+        return res.status(NON_EXISTENT).send({ message: "Not found" });
       }
+      return res.status(DEFAULT_ERROR).send({ message: "Server error" });
     });
 };
 
@@ -62,13 +64,11 @@ const updateLike = (req, res, method) => {
   const { itemId } = req.params;
 
   if (!req.user || !req.user._id) {
-    res.status(401).send({ message: "Unauthorized" });
-    return;
+    return res.status(401).send({ message: "Unauthorized" });
   }
 
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
-    res.status(400).send({ message: "Invalid item ID" });
-    return;
+    return res.status(INVALID_DATA).send({ message: "Invalid item ID" });
   }
 
   const update =
@@ -83,10 +83,9 @@ const updateLike = (req, res, method) => {
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
-        res.status(404).send({ message: "Not found" });
-      } else {
-        res.status(500).send({ message: "Server error" });
+        return res.status(NON_EXISTENT).send({ message: "Not found" });
       }
+      return res.status(DEFAULT_ERROR).send({ message: "Server error" });
     });
 };
 
