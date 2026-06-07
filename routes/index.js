@@ -8,7 +8,7 @@ const userRouter = require("./users");
 router.post("/signin", login);
 router.post("/signup", createUser);
 
-router.use("/items", clothingItemRouter);
+router.use("/items", auth, clothingItemRouter);
 router.use("/users", auth, userRouter);
 
 router.use((req, res) => {

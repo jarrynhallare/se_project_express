@@ -1,13 +1,14 @@
 $kind: http-request
+name: "[+] [POST] Add User"
 url: "{{base_url}}/users"
-method: POST
+method: GET
 body:
   type: json
   content: "{\r
 
-    \    \"name\": \"{{user_name}}\",\r
+    \    Authorization: Bearer \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2YTI1ODM1ZDIzMzQ0YzcwZDIwM2I4NGIiLCJpYXQiOjE3ODA4NDMzODIsImV4cCI6MTc4MTQ0ODE4Mn0.jmVVeAyTzFKH4skpwrUgnbFSDKoiU04jKQAEA0atYhg\"\r
 
-    \    \"avatar\": \"{{user_avatar}}\"\r
+    Content-Type: application/json\r
 
     }"
 scripts:
