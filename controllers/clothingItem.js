@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const ClothingItem = require("../models/clothingItem");
-const { INVALID_DATA, NON_EXISTENT, DEFAULT_ERROR } = require("../utils/errors");
+const { INVALID_DATA, NON_EXISTENT, DEFAULT_ERROR, FORBIDDEN, UNAUTHORIZED } = require("../utils/errors");
 
 // CREATE ITEM
 const createItem = (req, res) => {
@@ -47,7 +47,7 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((item) => {
       if (item.owner.toString() !== req.user._id.toString()) {
-        return res.status(403).send({ message: "Forbidden" });
+        return res.status(FORBIDDEN).send({ message: "Forbidden" });
       }
       return ClothingItem.findByIdAndDelete(itemId).then(() => res.status(200).send(item));
     })
@@ -64,7 +64,7 @@ const updateLike = (req, res, method) => {
   const { itemId } = req.params;
 
   if (!req.user || !req.user._id) {
-    return res.status(401).send({ message: "Unauthorized" });
+    return res.status(UNAUTHORIZED).send({ message: "Unauthorized" });
   }
 
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
