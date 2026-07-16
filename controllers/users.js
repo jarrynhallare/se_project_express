@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { JWT_SECRET } = require("../utils/config");
-const { DEFAULT_ERROR, INVALID_DATA, NON_EXISTENT } = require("../utils/errors");
+const { DEFAULT_ERROR, INVALID_DATA, NON_EXISTENT, UNAUTHORIZED, CONFLICT } = require("../utils/errors");
 const User = require("../models/user");
 
 
@@ -130,4 +130,4 @@ const updateUser = (req, res) => {
     });
 };
 
-module.exports = { getUsers, createUser, login, getCurrentUser, updateUser };
+module.exports = { createUser, login, getCurrentUser, updateUser };
