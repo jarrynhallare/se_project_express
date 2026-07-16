@@ -1,0 +1,38 @@
+$kind: http-request
+name: "* Authorization by another user"
+url: "{{base_url}}/signin"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"{{user_email_third}}\",\r
+
+    \    \"password\": \"{{user_password}}\"\r
+
+    }"
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: "try {\r
+
+      \    const regex = /^[a-zA-Z0-9\\-_]+?\\.[a-zA-Z0-9\\-_]+?\\.([a-zA-Z0-9\\-_]+)?$/;\r
+
+      \    const data = utils.getData(pm.response.json());\r
+
+      \    const token = data.token || data[Object.keys(data)[0]];\r
+
+      \    if(regex.test(token)) {\r
+
+      \        pm.collectionVariables.set(\"jwt_token_2\", token);\r
+
+      \    }\r
+
+      } catch (e) {\r
+
+      }"
+    language: text/javascript
+settings:
+  disabledSystemHeaders: []
+order: 20000

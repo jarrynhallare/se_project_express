@@ -1,0 +1,46 @@
+$kind: http-request
+url: "{{base_url}}/items/:id/likes"
+method: PUT
+pathVariables:
+  id: "{{item_id}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code should be 200 or 201\", () => {\r
+
+      \    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r
+
+      });"
+    language: text/javascript
+  - type: beforeRequest
+    code: |-
+      
+      const reqOpts = {
+        url: `${pm.collectionVariables.get('base_url')}/items`,
+        method: "POST",
+        header: {
+          "Content-Type": "application/json",
+      		"Authorization": `Bearer ${pm.collectionVariables.get('jwt_token')}`
+        },
+        body: JSON.stringify({
+          name: `${pm.collectionVariables.get('item_name')}`,
+      		weather: `${pm.collectionVariables.get('item_weather')}`,
+      		imageUrl: `${pm.collectionVariables.get('item_imageUrl')}`,
+        })
+      }
+
+
+      pm.sendRequest(reqOpts, (error, response) => {
+        pm.test("Preliminary POST /items request should be successful", () => {
+          pm.expect(response.code).to.be.oneOf([200, 201]);
+        });
+        try {
+          if (response.json()) {
+            const item = utils.getData(response.json());
+            pm.collectionVariables.set("item_id", item._id);
+          }
+        } catch (e) {}
+
+
+      });
+    language: text/javascript
+order: 8000

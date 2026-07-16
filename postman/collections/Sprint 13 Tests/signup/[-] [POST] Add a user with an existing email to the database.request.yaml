@@ -1,0 +1,59 @@
+$kind: http-request
+url: "{{base_url}}/signup"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"{{user_email_third}}\",\r
+
+    \    \"password\": \"{{user_password}}\",\r
+
+    \    \"name\": \"{{user_name}}\",\r
+
+    \    \"avatar\": \"{{user_avatar}}\"\r
+
+    }"
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code should be 409\", () => {\r
+
+      \    pm.response.to.have.status(409);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body should have json with a 'message' property\", () => {\r
+
+      \    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))\r
+
+      });\r\n"
+    language: text/javascript
+  - type: beforeRequest
+    code: |-
+      
+      const reqOpts = {
+        url: `${pm.collectionVariables.get('base_url')}/signup`,
+        method: "POST",
+        header: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: `${pm.collectionVariables.get('user_email_third')}`,
+      	password: `${pm.collectionVariables.get('user_password')}`,
+      	name: `${pm.collectionVariables.get('user_name')}`,
+          avatar: `${pm.collectionVariables.get('user_avatar')}`,
+        })
+      }
+
+
+      pm.sendRequest(reqOpts, (error, response) => {
+        pm.test("Preliminary POST /signup request should be successful or user exist.", () => {
+          pm.expect(response.code).to.be.oneOf([200, 201, 409]);
+        });
+      });
+    language: text/javascript
+order: 8000

@@ -34,8 +34,9 @@ const createUser = (req, res) => {
         password: hashedPassword,
       })
         .then((user) => {
-          delete user.password;
-          res.status(201).send(user);
+          const userObject = user.toObject();
+          delete userObject.password;
+          res.status(201).send(userObject);
         })
         .catch((err) => {
           console.error(err);
@@ -65,6 +66,13 @@ const createUser = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
+  // Validate that email and password are provided
+  if (!email || !password) {
+    return res.status(INVALID_DATA).send({
+      message: "invalid data passed to the methods for creating an user",
+    });
+  }
+
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -81,7 +89,11 @@ const login = (req, res) => {
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
     .orFail()
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      const userObject = user.toObject();
+      delete userObject.password;
+      res.status(200).send(userObject);
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "DocumentNotFoundError") {
@@ -107,7 +119,11 @@ const updateUser = (req, res) => {
     { new: true, runValidators: true }
   )
     .orFail()
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      const userObject = user.toObject();
+      delete userObject.password;
+      res.status(200).send(userObject);
+    })
     .catch((err) => {
       console.error(err);
       if (err.name === "ValidationError") {

@@ -1,0 +1,52 @@
+$kind: http-request
+url: "{{base_url}}/users/me"
+method: PATCH
+body:
+  type: json
+  content: |-
+    {
+      
+      "name": "{{$randomFirstName}} {{$randomLastName}}",
+      "avatar": "{{$randomAvatarImage}}"
+    }
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code should be 200\", function () {\r
+
+      \  pm.expect(pm.response.code).equals(200, \"Make sure that the server returns and receives the JWT token in the same way (if cookies are returned - the server should extract the token from them, if there are no cookies - from the headers)\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body should have json with correct data\", () => {\r
+
+      \  const user = utils.getData(pm.response.json());\r
+
+      \  const reqUser = JSON.parse(pm.request.body);\r
+
+      \r
+
+      \  pm.expect(user.name).to.eql(reqUser.name);\r
+
+      \  pm.collectionVariables.set(\"user_name\", user.name);\r
+
+      \  \r
+
+      \  pm.expect(user.avatar).to.eql(reqUser.avatar);\r
+
+      \  pm.collectionVariables.set(\"user_avatar\", user.avatar);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body shouldn't have a password hash\", () => {\r
+
+      \    const user = utils.getData(pm.response.json());\r
+
+      \    pm.expect(user).not.to.have.property('password');\r
+
+      });"
+    language: text/javascript
+order: 2000

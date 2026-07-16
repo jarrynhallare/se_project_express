@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{base_url}}/items/:id/likes"
+method: DELETE
+pathVariables:
+  id: "{{item_id}}"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code should be 200 or 404\", function () {\r
+
+      \  pm.expect(pm.response.code).to.be.oneOf([200, 404])\r
+
+      });"
+    language: text/javascript
+order: 13000

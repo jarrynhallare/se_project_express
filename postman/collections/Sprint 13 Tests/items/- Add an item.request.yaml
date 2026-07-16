@@ -1,0 +1,24 @@
+$kind: http-request
+name: "* Add an item"
+url: "{{base_url}}/items"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"{{item_name}}\",\r
+
+    \    \"weather\": \"{{item_weather}}\",\r
+
+    \    \"imageUrl\": \"{{item_imageUrl}}\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "const item = utils.getData(pm.response.json());\r
+
+      \r
+
+      pm.collectionVariables.set(\"item_id\", item._id);"
+    language: text/javascript
+order: 19000

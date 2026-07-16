@@ -1,0 +1,128 @@
+$kind: collection
+description: In sprint 13, you learned the basics of authorization and how to secure the server that hosts your applications. After implementing this knowledge in the “WTWR” project, you now have the opportunity to test your project using Postman collection tests suites.
+variables:
+  base_url: http://localhost:3001
+  user_name: test
+  user_avatar: https://example.com/av.bmp
+  user_email: em@em.com
+  user_email_second: em2@em2.com
+  user_email_third: em3@em3.com
+  user_password: longPass
+  user_id: ""
+  user_id_const: 61eade4c6d5acf558c42d9b8
+  user_name_changed: test2
+  user_avatar_changed: https://example.com/av2.bmp
+  user_name_incorrect: n
+  user_avatar_incorrect: https://thisisnotvalidurl
+  user_email_incorrect: test
+  user_password_incorrect: short
+  item_name: testItem
+  item_imageUrl: https://example.com/link.test
+  item_weather: hot
+  item_imageUrl_incorrect: https://thisisnotvalidurl
+  item_id: ""
+  schema_message_only: ""
+  jwt_token: ""
+  user_id_code: ""
+  jwt_token_2: ""
+scripts:
+  - type: http:beforeRequest
+    code: |-
+      const schemaMessageOnly = {
+          "type": "object",
+          "properties": {
+              "message": {
+                  "type": "string",
+                  "minLength": 1
+              }
+          },
+          "required": ["message"]
+      };
+
+      pm.collectionVariables.set("schema_message_only", JSON.stringify(schemaMessageOnly));
+
+      utils = {
+          getData: (jsonData) => {
+              if(Array.isArray(jsonData)) {
+                  return jsonData;
+              }
+
+              const keys = Object.keys(jsonData);
+              const firstKey = keys[0];
+              const firstKeyValue = jsonData[firstKey];
+
+              return keys.length === 1 && typeof firstKeyValue === 'object' ? firstKeyValue : jsonData;
+          },
+          generateSchemaValidationError: (source, key, jsonData) => {
+              console.log(jsonData);
+              const validationProps = {
+                  properties: {
+                      source: {
+                          type: "string",
+                          const: source
+                      },
+                      keys: {
+                          type: "array",
+                          items: [
+                              {
+                                  type: "string"
+                              }
+                          ]
+                      }
+                  },
+                  required: ["source", "keys"]
+              };
+
+              if(key !== null) {
+                  validationProps.properties.keys.items[0].const = key;
+              } 
+              
+              const schema = {
+                  type: 'object',
+                  properties: {
+                      statusCode: {
+                          type: 'integer'
+                      },
+                      error: {
+                          type: "string",
+                          const: "Bad Request"
+                      },
+                      message: {
+                          type: "string",
+                          minLength: 1
+                      },
+                      validation: {
+                          type: "object",
+                      }
+                  },
+                  required: ["statusCode", "error", "message"]
+              }
+              
+              if(Object.keys(jsonData?.validation).length === 1) {
+                  schema.properties.validation.properties = {
+                      [source]: {
+                          type: "object",
+                          ...validationProps
+                      }
+                  }
+                  schema.properties.validation.required = [source]
+              } else {
+                  schema.properties.validation = {...schema.properties.validation, ...validationProps}
+              }
+              
+              return schema;
+          }
+      }
+    language: text/javascript
+  - type: http:afterResponse
+    code: |-
+      pm.test("Response should contain a json object", () => {
+          pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');
+      });
+    language: text/javascript
+auth:
+  - id: 0037ef12-a65b-481e-9aa9-2598aefa380e
+    type: bearer
+    name: bearer auth
+    credentials:
+      token: "{{jwt_token}}"

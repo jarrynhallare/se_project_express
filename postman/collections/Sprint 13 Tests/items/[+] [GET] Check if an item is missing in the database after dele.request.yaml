@@ -1,0 +1,21 @@
+$kind: http-request
+name: "[+] [GET] Check if an item is missing in the database after deleting it"
+url: "{{base_url}}/items"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"The deleted item must not be in the database\", () => {\r
+
+      \    const items = utils.getData(pm.response.json());\r
+
+      \    const deletedId = pm.collectionVariables.get(\"item_id\");\r
+
+      \    const hasItem = !!items?.find((item) => item._id === deletedId);\r
+
+      \r
+
+      \    pm.expect(hasItem).to.eq(false);\r
+
+      });"
+    language: text/javascript
+order: 16000

@@ -1,0 +1,36 @@
+$kind: http-request
+name: '[-] [POST] Add a user with an invalid "email" field'
+url: "{{base_url}}/signup"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"{{user_email_incorrect}}\",\r
+
+    \    \"password\": \"{{user_password}}\",\r
+
+    \    \"name\": \"{{user_name}}\",\r
+
+    \    \"avatar\": \"{{user_avatar}}\"\r
+
+    }"
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code should be 400\", () => {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body should have json with a 'message' property\", () => {\r
+
+      \    pm.response.to.have.jsonSchema(JSON.parse(pm.collectionVariables.get(\"schema_message_only\")))\r
+
+      });"
+    language: text/javascript
+order: 4000

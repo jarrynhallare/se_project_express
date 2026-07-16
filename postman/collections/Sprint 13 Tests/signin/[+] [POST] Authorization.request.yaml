@@ -1,0 +1,51 @@
+$kind: http-request
+url: "{{base_url}}/signin"
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"email\": \"{{user_email}}\",\r
+
+    \    \"password\": \"{{user_password}}\"\r
+
+    }"
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code should be 200\", () => {\r
+
+      \tpm.response.to.have.status(200);\r
+
+      });\r
+
+      \r
+
+      try {\r
+
+      \tconst regex = /^[a-zA-Z0-9\\-_]+?\\.[a-zA-Z0-9\\-_]+?\\.([a-zA-Z0-9\\-_]+)?$/;\r
+
+      \tconst data = utils.getData(pm.response.json());\r
+
+      \tconst token = data.token || data[Object.keys(data)[0]];\r
+
+      \tpm.test('Response body should have the JWT token', () => {\r
+
+      \t\tpm.expect(token).not.to.be.undefined;\r
+
+      \t})\r
+
+      \tif (regex.test(token)) {\r
+
+      \t\tpm.collectionVariables.set(\"jwt_token\", token);\r
+
+      \t}\r
+
+      } catch (e) {\r
+
+      }"
+    language: text/javascript
+settings:
+  disabledSystemHeaders: []
+order: 5000

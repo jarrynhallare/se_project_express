@@ -1,0 +1,40 @@
+$kind: http-request
+url: "{{base_url}}/users/me"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code should be 200\", function () {\r
+
+      \    pm.expect(pm.response.code).equals(200, \"Make sure that the server returns and receives the JWT token in the same way (if cookies are returned - the server should extract the token from them, if there are no cookies - from the headers)\");\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body should have json with correct data\", () => {\r
+
+      \    const user = utils.getData(pm.response.json());\r
+
+      \r
+
+      \    pm.expect(user.name).to.eql(pm.collectionVariables.get(\"user_name\"));\r
+
+      \    pm.expect(user.avatar).to.eql(pm.collectionVariables.get(\"user_avatar\"));\r
+
+      \    pm.expect(user.email).to.eql(pm.collectionVariables.get(\"user_email\"));\r
+
+      });\r
+
+      \r
+
+      pm.test(\"Response body shouldn't have a password hash\", () => {\r
+
+      \    const user = utils.getData(pm.response.json());\r
+
+      \r
+
+      \    pm.expect(user).not.to.have.property('password');\r
+
+      });"
+    language: text/javascript
+order: 1000

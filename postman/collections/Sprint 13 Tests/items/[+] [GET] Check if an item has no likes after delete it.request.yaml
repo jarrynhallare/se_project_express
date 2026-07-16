@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{base_url}}/items"
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"The response body should have json with an empty 'likes' property\", () => {\r
+
+      \    const items = utils.getData(pm.response.json());\r
+
+      \    const userId = pm.collectionVariables.get(\"user_id_code\");\r
+
+      \    const itemId = pm.collectionVariables.get(\"item_id\");\r
+
+      \    const item = items?.find((item) => item._id === itemId);\r
+
+      \r
+
+      \    pm.expect(!!item?.likes?.includes(userId)).to.eq(false);\r
+
+      });"
+    language: text/javascript
+order: 14000
