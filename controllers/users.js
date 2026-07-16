@@ -36,7 +36,7 @@ const createUser = (req, res) => {
         .then((user) => {
           const userObject = user.toObject();
           delete userObject.password;
-         return res.status(201).send(userObject);
+          return res.status(201).send(userObject);
         })
         .catch((err) => {
           console.error(err);
@@ -82,7 +82,7 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(401).send({ message: "Incorrect email or password" });
+      res.status(401).send({ message: "Incorrect email or password" });
     });
 };
 
@@ -92,7 +92,7 @@ const getCurrentUser = (req, res) => {
     .then((user) => {
       const userObject = user.toObject();
       delete userObject.password;
-      return res.status(200).send(userObject);
+      res.status(200).send(userObject);
     })
     .catch((err) => {
       console.error(err);

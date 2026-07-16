@@ -78,9 +78,7 @@ const updateLike = (req, res, method) => {
 
   ClothingItem.findByIdAndUpdate(itemId, update, { new: true })
     .orFail()
-    .then((item) => {
-     return res.status(200).send(item);
-    })
+    .then((item) => res.status(200).send(item))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(NON_EXISTENT).send({ message: "Not found" });
