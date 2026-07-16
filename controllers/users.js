@@ -36,7 +36,7 @@ const createUser = (req, res) => {
         .then((user) => {
           const userObject = user.toObject();
           delete userObject.password;
-          res.status(201).send(userObject);
+         return res.status(201).send(userObject);
         })
         .catch((err) => {
           console.error(err);
@@ -78,11 +78,11 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
-      res.status(200).send({ token });
+      return res.status(200).send({ token });
     })
     .catch((err) => {
       console.error(err);
-      res.status(401).send({ message: "Incorrect email or password" });
+      return res.status(401).send({ message: "Incorrect email or password" });
     });
 };
 
@@ -92,7 +92,7 @@ const getCurrentUser = (req, res) => {
     .then((user) => {
       const userObject = user.toObject();
       delete userObject.password;
-      res.status(200).send(userObject);
+      return res.status(200).send(userObject);
     })
     .catch((err) => {
       console.error(err);

@@ -79,7 +79,7 @@ const updateLike = (req, res, method) => {
   ClothingItem.findByIdAndUpdate(itemId, update, { new: true })
     .orFail()
     .then((item) => {
-      res.status(200).send(item);
+     return res.status(200).send(item);
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
