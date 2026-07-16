@@ -26,35 +26,33 @@ const createUser = (req, res) => {
   }
 
   return bcrypt.hash(password, 10)
-    .then((hashedPassword) => {
-      return User.create({
-        name,
-        avatar,
-        email,
-        password: hashedPassword,
-      })
-        .then((user) => {
-          const userObject = user.toObject();
-          delete userObject.password;
-          return res.status(201).send(userObject);
-        })
-        .catch((err) => {
-          console.error(err);
-          if (err.name === "ValidationError") {
-            return res.status(INVALID_DATA).send({
-              message: "invalid data passed to the methods for creating an user",
-            });
-          }
-
-          if (err.code === 11000) {
-            return res.status(409).send({ message: "Email already exists" });
-          }
-
-          return res
-            .status(DEFAULT_ERROR)
-            .send({ message: "An error has occurred on the server" });
-        });
+    .then((hashedPassword) => User.create({
+      name,
+      avatar,
+      email,
+      password: hashedPassword,
     })
+      .then((user) => {
+        const userObject = user.toObject();
+        delete userObject.password;
+        return res.status(201).send(userObject);
+      })
+      .catch((err) => {
+        console.error(err);
+        if (err.name === "ValidationError") {
+          return res.status(INVALID_DATA).send({
+            message: "invalid data passed to the methods for creating an user",
+          });
+        }
+
+        if (err.code === 11000) {
+          return res.status(409).send({ message: "Email already exists" });
+        }
+
+        return res
+          .status(DEFAULT_ERROR)
+          .send({ message: "An error has occurred on the server" });
+      }))
     .catch((err) => {
       console.error(err);
       return res
