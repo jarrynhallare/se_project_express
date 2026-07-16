@@ -45,9 +45,10 @@ The primary goal of this project is to build a secure, scalable backend that con
 
 ---
 
-## 5. Video Demo
-
-🎥 Demo Video:
+ ## Project Pitch Video
+ 
+ - Check out [this video], https://www.loom.com/share/c50f3907b001433b9baaa95cd235a9c3 
+ where I describe my project and some challenges I faced while building it.
 
 ---
 
