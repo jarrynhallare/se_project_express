@@ -25,9 +25,9 @@ const createUser = (req, res) => {
     });
   }
 
-  bcrypt.hash(password, 10)
+  return bcrypt.hash(password, 10)
     .then((hashedPassword) => {
-      User.create({
+      return User.create({
         name,
         avatar,
         email,
@@ -57,7 +57,7 @@ const createUser = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res
+      return res
         .status(DEFAULT_ERROR)
         .send({ message: "An error has occurred on the server" });
     });
@@ -73,7 +73,7 @@ const login = (req, res) => {
     });
   }
 
-  User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
@@ -82,7 +82,7 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      res.status(401).send({ message: "Incorrect email or password" });
+      return res.status(401).send({ message: "Incorrect email or password" });
     });
 };
 

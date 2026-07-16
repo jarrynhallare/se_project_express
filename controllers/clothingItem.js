@@ -43,7 +43,7 @@ const deleteItem = (req, res) => {
     return res.status(INVALID_DATA).send({ message: "Invalid item ID" });
   }
 
-  ClothingItem.findById(itemId)
+  return ClothingItem.findById(itemId)
     .orFail()
     .then((item) => {
       if (item.owner.toString() !== req.user._id.toString()) {
@@ -76,7 +76,7 @@ const updateLike = (req, res, method) => {
       ? { $addToSet: { likes: req.user._id } }
       : { $pull: { likes: req.user._id } };
 
-  ClothingItem.findByIdAndUpdate(itemId, update, { new: true })
+  return ClothingItem.findByIdAndUpdate(itemId, update, { new: true })
     .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
