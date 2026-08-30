@@ -28,7 +28,7 @@ const createItem = (req, res) => {
 const getItems = (req, res) => {
   ClothingItem.find({})
     .then((items) => {
-      res.status(200).send(items);
+      res.send(items);
     })
     .catch(() => {
       res.status(DEFAULT_ERROR).send({ message: "Server error" });

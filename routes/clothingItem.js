@@ -10,9 +10,6 @@ const {
 // Create
 router.post("/", createItem);
 
-// Read
-router.get("/", getItems);
-
 // Like (TEST EXPECTS PUT per your note)
 router.put("/:itemId/likes", likeItem);
 
